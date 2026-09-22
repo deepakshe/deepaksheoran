@@ -3,110 +3,271 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Interactive AI Receptionist Demo</title>
+<title>Apex AI Receptionist | 24/7 Patient Booking & Practice Assistant</title>
 <style>
+  :root {
+    --primary: #2563eb;
+    --primary-glow: rgba(37, 99, 235, 0.35);
+    --accent: #10b981;
+    --bg-dark: #090d16;
+    --card-bg: #131d31;
+    --card-border: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  body { background: #0f172a; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-  .badge { background: #10b98120; color: #34d399; border: 1px solid #10b98140; padding: 6px 14px; border-radius: 9999px; font-size: 13px; font-weight: 600; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px; }
-  .badge::before { content: ""; width: 8px; height: 8px; background: #34d399; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-  h1 { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 8px; }
-  p.subtitle { color: #94a3b8; font-size: 15px; text-align: center; margin-bottom: 24px; max-width: 500px; }
-  .phone-card { width: 100%; max-width: 420px; background: #1e293b; border-radius: 24px; border: 1px solid #334155; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); overflow: hidden; display: flex; flex-direction: column; height: 560px; }
-  .chat-header { background: #0f172a; padding: 16px 20px; border-bottom: 1px solid #334155; display: flex; align-items: center; gap: 12px; }
-  .avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #fff; }
-  .header-info h3 { font-size: 15px; font-weight: 600; }
-  .header-info span { font-size: 12px; color: #34d399; display: flex; align-items: center; gap: 4px; }
-  .chat-body { flex: 1; padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #090d16; }
-  .msg { max-width: 82%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.45; animation: fadeIn 0.2s ease-out; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-  .msg.bot { background: #1e293b; color: #f1f5f9; border-bottom-left-radius: 4px; border: 1px solid #334155; align-self: flex-start; }
-  .msg.user { background: #2563eb; color: #fff; border-bottom-right-radius: 4px; align-self: flex-end; }
-  .quick-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px; background: #0f172a; border-top: 1px solid #1e293b; }
-  .chip { background: #1e293b; color: #38bdf8; border: 1px solid #38bdf840; padding: 7px 12px; border-radius: 12px; font-size: 12px; cursor: pointer; transition: all 0.15s; }
-  .chip:hover { background: #38bdf820; border-color: #38bdf8; }
-  .chat-input { display: flex; padding: 12px 16px; background: #0f172a; border-top: 1px solid #334155; gap: 8px; }
-  .chat-input input { flex: 1; background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 10px 14px; color: #fff; font-size: 14px; outline: none; }
-  .chat-input button { background: #2563eb; color: #fff; border: none; padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; }
-  .chat-input button:hover { background: #1d4ed8; }
-  .guarantee-bar { margin-top: 20px; font-size: 13px; color: #64748b; text-align: center; }
+  body { background: var(--bg-dark); color: var(--text-main); line-height: 1.6; padding: 0 16px 80px; }
+  
+  .container { max-width: 1000px; margin: 0 auto; }
+  
+  /* Navbar */
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; border-bottom: 1px solid var(--card-border); margin-bottom: 40px; }
+  .logo { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+  .logo span { color: #38bdf8; }
+  .nav-btn { background: #1e293b; color: #fff; padding: 8px 18px; border-radius: 999px; text-decoration: none; font-size: 13px; font-weight: 600; border: 1px solid #334155; }
+
+  /* Hero */
+  .hero { text-align: center; margin-bottom: 48px; }
+  .badge { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); padding: 6px 16px; border-radius: 9999px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px; }
+  .badge-dot { width: 8px; height: 8px; background: #34d399; border-radius: 50%; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(1.2); } }
+  h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 800; letter-spacing: -1px; line-height: 1.2; margin-bottom: 18px; }
+  h1 span { background: linear-gradient(135deg, #60a5fa, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  p.hero-sub { color: var(--text-muted); font-size: clamp(16px, 2.5vw, 19px); max-width: 680px; margin: 0 auto 32px; }
+
+  /* Interactive Demo Section */
+  .demo-wrapper { background: linear-gradient(180deg, #131d31, #0d1525); border: 1px solid #24344d; border-radius: 28px; padding: 28px 20px; margin-bottom: 64px; box-shadow: 0 25px 60px rgba(0,0,0,0.6); }
+  .demo-header { text-align: center; margin-bottom: 24px; }
+  .demo-header h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .demo-header p { font-size: 14px; color: var(--text-muted); }
+  
+  .chat-box { max-width: 480px; margin: 0 auto; background: #0c121e; border: 1px solid #1e293b; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+  .chat-bar { background: #131d31; padding: 14px 18px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #1e293b; }
+  .chat-bar .bot-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #7c3aed); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .chat-bar .bot-title { font-size: 14px; font-weight: 700; }
+  .chat-bar .bot-status { font-size: 11px; color: #34d399; display: flex; align-items: center; gap: 4px; }
+  
+  .chat-body { padding: 16px; height: 320px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #090e18; }
+  .bubble { max-width: 84%; padding: 11px 15px; border-radius: 16px; font-size: 13.5px; line-height: 1.45; word-wrap: break-word; }
+  .bubble.bot { background: #1a253a; color: #f1f5f9; border-bottom-left-radius: 4px; border: 1px solid #24344d; align-self: flex-start; }
+  .bubble.user { background: #2563eb; color: #fff; border-bottom-right-radius: 4px; align-self: flex-end; }
+  
+  .chips-row { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 14px; background: #0c121e; border-top: 1px solid #1a253a; }
+  .chip-btn { background: #162238; color: #38bdf8; border: 1px solid #283d63; padding: 6px 11px; border-radius: 999px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .chip-btn:hover { background: #1e3a5f; border-color: #38bdf8; }
+  
+  .input-row { display: flex; gap: 8px; padding: 12px 14px; background: #131d31; border-top: 1px solid #1e293b; }
+  .input-row input { flex: 1; background: #0c121e; border: 1px solid #24344d; border-radius: 12px; padding: 9px 12px; color: #fff; font-size: 13.5px; outline: none; }
+  .input-row button { background: #2563eb; color: #fff; border: none; padding: 9px 16px; border-radius: 12px; font-size: 13px; font-weight: 700; cursor: pointer; }
+
+  /* Feature Grid */
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 64px; }
+  .card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 24px; transition: transform 0.2s; }
+  .card:hover { transform: translateY(-4px); border-color: #3b82f6; }
+  .card-icon { font-size: 28px; margin-bottom: 12px; }
+  .card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--text-muted); }
+
+  /* Comparison Section */
+  .compare-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 28px; margin-bottom: 64px; }
+  .compare-box h2 { font-size: 22px; text-align: center; margin-bottom: 24px; }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid #1e293b; }
+  th { color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .tag-bad { color: #f87171; font-weight: 600; }
+  .tag-good { color: #34d399; font-weight: 600; }
+
+  /* Pricing / Offer */
+  .pricing-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 2px solid #3b82f6; border-radius: 24px; padding: 36px 24px; text-align: center; max-width: 580px; margin: 0 auto 60px; box-shadow: 0 20px 50px rgba(37, 99, 235, 0.2); }
+  .pricing-badge { background: #3b82f6; color: #fff; font-size: 11px; font-weight: 800; text-transform: uppercase; padding: 4px 12px; border-radius: 999px; display: inline-block; margin-bottom: 12px; letter-spacing: 0.5px; }
+  .price { font-size: 48px; font-weight: 900; margin-bottom: 6px; }
+  .price span { font-size: 18px; font-weight: 500; color: var(--text-muted); }
+  .price-sub { color: #34d399; font-size: 14px; font-weight: 600; margin-bottom: 24px; }
+  .checklist { list-style: none; text-align: left; margin: 0 auto 28px; max-width: 400px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+  .checklist li { display: flex; align-items: center; gap: 10px; color: #e2e8f0; }
+  .checklist li span { color: #34d399; font-weight: 800; }
+  .cta-btn { display: inline-block; width: 100%; max-width: 360px; background: #2563eb; color: #fff; font-size: 16px; font-weight: 700; padding: 14px 24px; border-radius: 14px; text-decoration: none; transition: background 0.2s; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); }
+  .cta-btn:hover { background: #1d4ed8; }
+  .guarantee-note { font-size: 12px; color: var(--text-muted); margin-top: 14px; }
+
+  /* Footer */
+  footer { text-align: center; font-size: 13px; color: #64748b; padding-top: 24px; border-top: 1px solid #1e293b; }
 </style>
 </head>
 <body>
 
-<div class="badge">Live Interactive Prototype</div>
-<h1>24/7 AI Clinic & Practice Assistant</h1>
-<p class="subtitle">Experience how incoming client inquiries are converted into booked appointments in real-time, day or night.</p>
+<div class="container">
+  <nav>
+    <div class="logo">⚡ <span>Apex AI</span> Assistant</div>
+    <a href="mailto:deepaksheoran720698@gmail.com" class="nav-btn">Get Started ($49)</a>
+  </nav>
 
-<div class="phone-card">
-  <div class="chat-header">
-    <div class="avatar">⚡</div>
-    <div class="header-info">
-      <h3>Harley Street AI Assistant</h3>
-      <span>Online • Instant Auto-Booking</span>
+  <section class="hero">
+    <div class="badge">
+      <div class="badge-dot"></div>
+      Interactive 24/7 Practice Assistant Prototype
+    </div>
+    <h1>Turn After-Hours Visitors Into <span>Confirmed Bookings</span></h1>
+    <p class="hero-sub">Over 35% of clients look for appointments after 6:00 PM when your front desk is closed. Our AI answers questions, quotes fees, and books calendar slots in 3 seconds flat.</p>
+  </section>
+
+  <!-- Interactive Live Demo -->
+  <section class="demo-wrapper">
+    <div class="demo-header">
+      <h2>⚡ Live Interactive Simulator</h2>
+      <p>Test real patient interactions below. Click a quick chip or type your own question!</p>
+    </div>
+
+    <div class="chat-box">
+      <div class="chat-bar">
+        <div class="bot-avatar">🤖</div>
+        <div>
+          <div class="bot-title">Clinic Care Assistant</div>
+          <div class="bot-status">● Active Now • Instant Booking</div>
+        </div>
+      </div>
+
+      <div class="chat-body" id="chat">
+        <div class="bubble bot">
+          Hello! Welcome to our 24/7 automated care line. Are you looking to book an appointment, check treatment costs, or check clinic hours?
+        </div>
+      </div>
+
+      <div class="chips-row">
+        <button class="chip-btn" onclick="sendChip('📅 Book Consultation')">📅 Book Consultation</button>
+        <button class="chip-btn" onclick="sendChip('💰 Treatment Pricing')">💰 Treatment Pricing</button>
+        <button class="chip-btn" onclick="sendChip('⏰ Operating Hours')">⏰ Operating Hours</button>
+        <button class="chip-btn" onclick="sendChip('📍 Clinic Location')">📍 Location</button>
+      </div>
+
+      <div class="input-row">
+        <input type="text" id="userInput" placeholder="Type a question or 'book slot'..." onkeypress="if(event.key==='Enter') sendMsg()">
+        <button onclick="sendMsg()">Send</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Value Pillars -->
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h3>3-Second Instant Reply</h3>
+      <p>Patients never wait on hold. The AI answers immediately at 2 AM or on bank holidays, preventing patients from booking with competitors.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📅</div>
+      <h3>Live Calendar Sync</h3>
+      <p>Connects directly to your Google Calendar, Calendly, or Practice Management software to prevent double bookings.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💬</div>
+      <h3>Custom Clinic Tone</h3>
+      <p>Trained specifically on your treatments, consultation fees, parking details, and doctor bios for 100% accurate responses.</p>
     </div>
   </div>
 
-  <div class="chat-body" id="chat">
-    <div class="msg bot">
-      Hello! Welcome to our 24/7 online reception. How can we help you today?
+  <!-- Comparison -->
+  <section class="compare-box">
+    <h2>Traditional Front Desk vs. Apex AI Reception</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>Traditional Reception</th>
+            <th>Apex AI Assistant</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Inquiry at 8:30 PM</strong></td>
+            <td><span class="tag-bad">❌ Voicemail (30% lost)</span></td>
+            <td><span class="tag-good">✅ Booked in 30 seconds</span></td>
+          </tr>
+          <tr>
+            <td><strong>Weekend Inquiries</strong></td>
+            <td><span class="tag-bad">❌ Waiting till Monday</span></td>
+            <td><span class="tag-good">✅ Immediate confirmation</span></td>
+          </tr>
+          <tr>
+            <td><strong>Cost per month</strong></td>
+            <td><span class="tag-bad">❌ $2,500+ salary/overtime</span></td>
+            <td><span class="tag-good">✅ Flat $49 one-time setup pilot</span></td>
+          </tr>
+          <tr>
+            <td><strong>Speed of Response</strong></td>
+            <td><span class="tag-bad">❌ 15–45 minutes average</span></td>
+            <td><span class="tag-good">✅ Instant (< 3 seconds)</span></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </div>
+  </section>
 
-  <div class="quick-chips">
-    <button class="chip" onclick="sendChip('📅 Book an appointment')">📅 Book Appointment</button>
-    <button class="chip" onclick="sendChip('💰 Service pricing')">💰 Service Pricing</button>
-    <button class="chip" onclick="sendChip('⏰ Opening hours')">⏰ Opening Hours</button>
-  </div>
+  <!-- Pricing Offer -->
+  <section class="pricing-card">
+    <div class="pricing-badge">Early Adopter Pilot Offer</div>
+    <div class="price">$49 <span>/ one-time setup</span></div>
+    <div class="price-sub">Zero monthly subscriptions • 100% money-back guarantee</div>
+    
+    <ul class="checklist">
+      <li><span>✓</span> Full custom training on your clinic services & pricing</li>
+      <li><span>✓</span> Direct integration into your website & calendar</li>
+      <li><span>✓</span> 24/7 automated booking without human intervention</li>
+      <li><span>✓</span> Ready and live in 24 hours</li>
+      <li><span>✓</span> 100% refund if you don't receive at least 3 bookings in week 1</li>
+    </ul>
 
-  <div class="chat-input">
-    <input type="text" id="userInput" placeholder="Ask a question or type 'book'..." onkeypress="if(event.key==='Enter') sendMsg()">
-    <button onclick="sendMsg()">Send</button>
-  </div>
-</div>
+    <a href="mailto:deepaksheoran720698@gmail.com?subject=I%20want%20the%20$49%20AI%20Receptionist%20Setup" class="cta-btn">Claim Your $49 Setup Pilot →</a>
+    <div class="guarantee-note">Email deepaksheoran720698@gmail.com to activate within 24 hours.</div>
+  </section>
 
-<div class="guarantee-bar">
-  🔒 100% Automated • Zero Missed Calls • $49 Complete Setup Pilot
+  <footer>
+    Apex AI Solutions • Global Automated Client Intake Systems • contact: deepaksheoran720698@gmail.com
+  </footer>
 </div>
 
 <script>
 const chat = document.getElementById('chat');
 const input = document.getElementById('userInput');
 
-function addMsg(text, type) {
-  const m = document.createElement('div');
-  m.className = 'msg ' + type;
-  m.innerText = text;
-  chat.appendChild(m);
+function addBubble(text, type) {
+  const b = document.createElement('div');
+  b.className = 'bubble ' + type;
+  b.innerText = text;
+  chat.appendChild(b);
   chat.scrollTop = chat.scrollHeight;
 }
 
-function sendChip(text) {
-  addMsg(text, 'user');
-  processReply(text);
+function sendChip(txt) {
+  addBubble(txt, 'user');
+  respond(txt);
 }
 
 function sendMsg() {
-  const text = input.value.trim();
-  if (!text) return;
-  addMsg(text, 'user');
+  const val = input.value.trim();
+  if (!val) return;
+  addBubble(val, 'user');
   input.value = '';
-  processReply(text);
+  respond(val);
 }
 
-function processReply(query) {
+function respond(query) {
   const q = query.toLowerCase();
   setTimeout(() => {
-    if (q.includes('book') || q.includes('appointment') || q.includes('slot')) {
-      addMsg("✅ We have slots open today at 4:30 PM or tomorrow at 11:00 AM. Which one works best for you? (You can reply with your preferred time)", "bot");
-    } else if (q.includes('price') || q.includes('cost') || q.includes('rate') || q.includes('fee')) {
-      addMsg("💎 Consultation & checkup: $45 | Comprehensive Treatment: $120. Would you like me to reserve a consultation spot for you?", "bot");
+    if (q.includes('book') || q.includes('appointment') || q.includes('consultation')) {
+      addBubble("✅ We have slots open today at 4:30 PM or tomorrow at 10:15 AM & 2:00 PM. What time suits you best?", "bot");
+    } else if (q.includes('price') || q.includes('cost') || q.includes('fee') || q.includes('rate')) {
+      addBubble("💎 Initial Consultation & Diagnostics: $45. Treatment sessions start at $95. Would you like me to reserve a consultation spot for you?", "bot");
     } else if (q.includes('hour') || q.includes('timing') || q.includes('open')) {
-      addMsg("⏰ We are open Monday to Saturday, 8:30 AM – 7:30 PM. However, you can book online through me 24/7 anytime!", "bot");
+      addBubble("⏰ Front desk is open Mon–Sat 8:30 AM – 6:30 PM. But through me, you can book online 24 hours a day, 7 days a week!", "bot");
+    } else if (q.includes('location') || q.includes('address') || q.includes('where')) {
+      addBubble("📍 We are centrally located on Main Street with free dedicated patient parking available behind the building.", "bot");
     } else {
-      addMsg("Got it! I can book your appointment or notify the duty doctor right away. Please share your phone number or preferred date!", "bot");
+      addBubble("Got it! I can secure your appointment slot or notify our clinical director right now. What is the best phone number or email to reach you?", "bot");
     }
-  }, 400);
+  }, 350);
 }
 </script>
 
