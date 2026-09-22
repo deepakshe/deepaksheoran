@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Interactive AI Receptionist Demo</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body { background: #0f172a; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+  .badge { background: #10b98120; color: #34d399; border: 1px solid #10b98140; padding: 6px 14px; border-radius: 9999px; font-size: 13px; font-weight: 600; margin-bottom: 16px; display: inline-flex; align-items: center; gap: 6px; }
+  .badge::before { content: ""; width: 8px; height: 8px; background: #34d399; border-radius: 50%; display: inline-block; animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  h1 { font-size: 28px; font-weight: 700; text-align: center; margin-bottom: 8px; }
+  p.subtitle { color: #94a3b8; font-size: 15px; text-align: center; margin-bottom: 24px; max-width: 500px; }
+  .phone-card { width: 100%; max-width: 420px; background: #1e293b; border-radius: 24px; border: 1px solid #334155; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); overflow: hidden; display: flex; flex-direction: column; height: 560px; }
+  .chat-header { background: #0f172a; padding: 16px 20px; border-bottom: 1px solid #334155; display: flex; align-items: center; gap: 12px; }
+  .avatar { width: 42px; height: 42px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #8b5cf6); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: #fff; }
+  .header-info h3 { font-size: 15px; font-weight: 600; }
+  .header-info span { font-size: 12px; color: #34d399; display: flex; align-items: center; gap: 4px; }
+  .chat-body { flex: 1; padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; background: #090d16; }
+  .msg { max-width: 82%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.45; animation: fadeIn 0.2s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .msg.bot { background: #1e293b; color: #f1f5f9; border-bottom-left-radius: 4px; border: 1px solid #334155; align-self: flex-start; }
+  .msg.user { background: #2563eb; color: #fff; border-bottom-right-radius: 4px; align-self: flex-end; }
+  .quick-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 16px; background: #0f172a; border-top: 1px solid #1e293b; }
+  .chip { background: #1e293b; color: #38bdf8; border: 1px solid #38bdf840; padding: 7px 12px; border-radius: 12px; font-size: 12px; cursor: pointer; transition: all 0.15s; }
+  .chip:hover { background: #38bdf820; border-color: #38bdf8; }
+  .chat-input { display: flex; padding: 12px 16px; background: #0f172a; border-top: 1px solid #334155; gap: 8px; }
+  .chat-input input { flex: 1; background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 10px 14px; color: #fff; font-size: 14px; outline: none; }
+  .chat-input button { background: #2563eb; color: #fff; border: none; padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .chat-input button:hover { background: #1d4ed8; }
+  .guarantee-bar { margin-top: 20px; font-size: 13px; color: #64748b; text-align: center; }
+</style>
+</head>
+<body>
+
+<div class="badge">Live Interactive Prototype</div>
+<h1>24/7 AI Clinic & Practice Assistant</h1>
+<p class="subtitle">Experience how incoming client inquiries are converted into booked appointments in real-time, day or night.</p>
+
+<div class="phone-card">
+  <div class="chat-header">
+    <div class="avatar">⚡</div>
+    <div class="header-info">
+      <h3>Harley Street AI Assistant</h3>
+      <span>Online • Instant Auto-Booking</span>
+    </div>
+  </div>
+
+  <div class="chat-body" id="chat">
+    <div class="msg bot">
+      Hello! Welcome to our 24/7 online reception. How can we help you today?
+    </div>
+  </div>
+
+  <div class="quick-chips">
+    <button class="chip" onclick="sendChip('📅 Book an appointment')">📅 Book Appointment</button>
+    <button class="chip" onclick="sendChip('💰 Service pricing')">💰 Service Pricing</button>
+    <button class="chip" onclick="sendChip('⏰ Opening hours')">⏰ Opening Hours</button>
+  </div>
+
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="Ask a question or type 'book'..." onkeypress="if(event.key==='Enter') sendMsg()">
+    <button onclick="sendMsg()">Send</button>
+  </div>
+</div>
+
+<div class="guarantee-bar">
+  🔒 100% Automated • Zero Missed Calls • $49 Complete Setup Pilot
+</div>
+
+<script>
+const chat = document.getElementById('chat');
+const input = document.getElementById('userInput');
+
+function addMsg(text, type) {
+  const m = document.createElement('div');
+  m.className = 'msg ' + type;
+  m.innerText = text;
+  chat.appendChild(m);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function sendChip(text) {
+  addMsg(text, 'user');
+  processReply(text);
+}
+
+function sendMsg() {
+  const text = input.value.trim();
+  if (!text) return;
+  addMsg(text, 'user');
+  input.value = '';
+  processReply(text);
+}
+
+function processReply(query) {
+  const q = query.toLowerCase();
+  setTimeout(() => {
+    if (q.includes('book') || q.includes('appointment') || q.includes('slot')) {
+      addMsg("✅ We have slots open today at 4:30 PM or tomorrow at 11:00 AM. Which one works best for you? (You can reply with your preferred time)", "bot");
+    } else if (q.includes('price') || q.includes('cost') || q.includes('rate') || q.includes('fee')) {
+      addMsg("💎 Consultation & checkup: $45 | Comprehensive Treatment: $120. Would you like me to reserve a consultation spot for you?", "bot");
+    } else if (q.includes('hour') || q.includes('timing') || q.includes('open')) {
+      addMsg("⏰ We are open Monday to Saturday, 8:30 AM – 7:30 PM. However, you can book online through me 24/7 anytime!", "bot");
+    } else {
+      addMsg("Got it! I can book your appointment or notify the duty doctor right away. Please share your phone number or preferred date!", "bot");
+    }
+  }, 400);
+}
+</script>
+
+</body>
+</html>
